@@ -1,0 +1,47 @@
+name: Build Android APK (One-Click)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 33
+          build-tools: '33.0.2'
+
+      - name: Ensure JitPack repository is present (for HelloCharts)
+        run: |
+          if ! grep -q 'jitpack.io' build.gradle; then
+            awk '/repositories \{/ && c==0 {print; print "        maven { url \\"https://jitpack.io\\" }"; c=1; next}1' build.gradle > build.gradle.tmp && mv build.gradle.tmp build.gradle
+          fi
+
+      - name: Install Gradle (no wrapper in repo)
+        run: |
+          curl -L https://services.gradle.org/distributions/gradle-7.6-bin.zip -o gradle.zip
+          unzip -q gradle.zip
+          echo "$PWD/gradle-7.6/bin" >> $GITHUB_PATH
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
