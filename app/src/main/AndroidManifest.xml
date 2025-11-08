@@ -1,0 +1,27 @@
+<manifest 
+    xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android"
+    package="listview.tianhetbm">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" tools:targetApi="33"/>
+    <uses-feature android:name="android.hardware.camera.any" android:required="false"/>
+    <application
+        android:label="农作物病虫害识别"
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="true"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CropApp">
+        <activity android:name=".Activity.HomeActivity" />
+        <activity android:name=".Activity.WebViewActivity" />
+        <activity android:name=".Activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+            <activity android:name=".Activity.RecognizeActivity" />
+    </application>
+</manifest>
